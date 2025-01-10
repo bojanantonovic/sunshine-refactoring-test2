@@ -20,36 +20,33 @@ public class PancakeService {
 
     public void addDarkChocolatePancake(UUID orderId, int count) {
         for (int i = 0; i < count; ++i) {
-            addPancake(new DarkChocolatePancake(),
-                       orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get());
+            addPancake(new DarkChocolatePancake(), getOrderById(orderId));
         }
     }
 
+
+
     public void addDarkChocolateWhippedCreamPancake(UUID orderId, int count) {
         for (int i = 0; i < count; ++i) {
-            addPancake(new DarkChocolateWhippedCreamPancake(),
-                       orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get());
+            addPancake(new DarkChocolateWhippedCreamPancake(), getOrderById(orderId));
         }
     }
 
     public void addDarkChocolateWhippedCreamHazelnutsPancake(UUID orderId, int count) {
         for (int i = 0; i < count; ++i) {
-            addPancake(new DarkChocolateWhippedCreamHazelnutsPancake(),
-                       orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get());
+            addPancake(new DarkChocolateWhippedCreamHazelnutsPancake(), getOrderById(orderId));
         }
     }
 
     public void addMilkChocolatePancake(UUID orderId, int count) {
         for (int i = 0; i < count; ++i) {
-            addPancake(new MilkChocolatePancake(),
-                       orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get());
+            addPancake(new MilkChocolatePancake(), getOrderById(orderId));
         }
     }
 
     public void addMilkChocolateHazelnutsPancake(UUID orderId, int count) {
         for (int i = 0; i < count; ++i) {
-            addPancake(new MilkChocolateHazelnutsPancake(),
-                       orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get());
+            addPancake(new MilkChocolateHazelnutsPancake(), getOrderById(orderId));
         }
     }
 
@@ -74,12 +71,12 @@ public class PancakeService {
                    removedCount.getAndIncrement() < count;
         });
 
-        Order order = orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get();
+        Order order = getOrderById(orderId);
         OrderLog.logRemovePancakes(order, description, removedCount.get(), pancakes);
     }
 
     public void cancelOrder(UUID orderId) {
-        Order order = orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get();
+        Order order = getOrderById(orderId);
         OrderLog.logCancelOrder(order, this.pancakes);
 
         pancakes.removeIf(pancake -> pancake.getOrderId().equals(orderId));
@@ -110,7 +107,7 @@ public class PancakeService {
     public Object[] deliverOrder(UUID orderId) {
         if (!preparedOrders.contains(orderId)) return null;
 
-        Order order = orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get();
+        Order order = getOrderById(orderId);
         List<String> pancakesToDeliver = viewOrder(orderId);
         OrderLog.logDeliverOrder(order, this.pancakes);
 
@@ -119,5 +116,9 @@ public class PancakeService {
         preparedOrders.removeIf(u -> u.equals(orderId));
 
         return new Object[] {order, pancakesToDeliver};
+    }
+
+    private Order getOrderById(final UUID orderId) {
+        return orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().get();
     }
 }
