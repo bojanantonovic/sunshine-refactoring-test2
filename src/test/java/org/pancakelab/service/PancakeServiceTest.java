@@ -12,7 +12,6 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Deprecated
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class PancakeServiceTest {
