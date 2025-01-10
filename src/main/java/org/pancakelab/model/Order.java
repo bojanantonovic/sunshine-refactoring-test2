@@ -11,7 +11,7 @@ public class Order {
 	private final UUID id;
 	private final int building;
 	private final int room;
-	// the next field are supportive for the PancakeService class => more data for an easier implementation
+	// the next fields are supportive for the PancakeService class => more data for an easier implementation
 	private final List<PancakeRecipe> pancakeRecipes = new ArrayList<>();
 
 	public Order(int building, int room) {
@@ -42,7 +42,7 @@ public class Order {
 			return true;
 		if (o == null || getClass() != o.getClass())
 			return false;
-		Order order = (Order) o;
+		var order = (Order) o;
 		return Objects.equals(id, order.id);
 	}
 

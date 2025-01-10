@@ -12,7 +12,7 @@ public class PancakeService {
 	private final Set<UUID> preparedOrders = new HashSet<>();
 
 	public synchronized Order createOrder(int building, int room) {
-		Order order = new Order(building, room);
+		var order = new Order(building, room);
 		orders.add(order);
 		return order;
 	}
@@ -29,7 +29,7 @@ public class PancakeService {
 
 	public void addPancake(UUID orderId, int count, String... ingredients) {
 		final var ingredientAsList = List.of(ingredients);
-		for (int i = 0; i < count; ++i) {
+		for (var i = 0; i < count; ++i) {
 			addPancake(new PancakeRecipe(ingredientAsList), getOrderById(orderId));
 		}
 	}
@@ -42,8 +42,8 @@ public class PancakeService {
 	}
 
 	public synchronized void removePancakes(String description, UUID orderId, int count) {
-		final AtomicInteger removedCount = new AtomicInteger(0);
-		Order order = getOrderById(orderId);
+		final var removedCount = new AtomicInteger(0);
+		var order = getOrderById(orderId);
 		final var pancakeRecipes = order.getPancakeRecipes();
 		pancakeRecipes.removeIf(pancake -> {
 			return pancake.description().equals(description) && removedCount.getAndIncrement() < count;
@@ -53,7 +53,7 @@ public class PancakeService {
 	}
 
 	public synchronized void cancelOrder(UUID orderId) {
-		Order order = getOrderById(orderId);
+		var order = getOrderById(orderId);
 		OrderLog.logCancelOrder(order);
 
 		orders.removeIf(o -> o.getId().equals(orderId));
@@ -84,8 +84,8 @@ public class PancakeService {
 		if (!preparedOrders.contains(orderId))
 			return null;
 
-		Order order = getOrderById(orderId);
-		List<String> pancakesToDeliver = viewOrder(orderId);
+		var order = getOrderById(orderId);
+		var pancakesToDeliver = viewOrder(orderId);
 		OrderLog.logDeliverOrder(order);
 
 		orders.removeIf(o -> o.getId().equals(orderId));
