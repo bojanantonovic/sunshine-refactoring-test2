@@ -11,7 +11,7 @@ public class PancakeService {
 	private final Set<UUID> completedOrders = new HashSet<>();
 	private final Set<UUID> preparedOrders = new HashSet<>();
 
-	public Order createOrder(int building, int room) {
+	public synchronized Order createOrder(int building, int room) {
 		Order order = new Order(building, room);
 		orders.add(order);
 		return order;
@@ -41,7 +41,7 @@ public class PancakeService {
 		OrderLog.logAddPancake(order, pancake.description());
 	}
 
-	public void removePancakes(String description, UUID orderId, int count) {
+	public synchronized void removePancakes(String description, UUID orderId, int count) {
 		final AtomicInteger removedCount = new AtomicInteger(0);
 		Order order = getOrderById(orderId);
 		final var pancakeRecipes = order.getPancakeRecipes();
@@ -52,7 +52,7 @@ public class PancakeService {
 		OrderLog.logRemovePancakes(order, description, removedCount.get());
 	}
 
-	public void cancelOrder(UUID orderId) {
+	public synchronized void cancelOrder(UUID orderId) {
 		Order order = getOrderById(orderId);
 		OrderLog.logCancelOrder(order);
 
@@ -63,7 +63,7 @@ public class PancakeService {
 		OrderLog.logCancelOrder(order);
 	}
 
-	public void completeOrder(UUID orderId) {
+	public synchronized void completeOrder(UUID orderId) {
 		completedOrders.add(orderId);
 	}
 
@@ -71,7 +71,7 @@ public class PancakeService {
 		return completedOrders;
 	}
 
-	public void prepareOrder(UUID orderId) {
+	public synchronized void prepareOrder(UUID orderId) {
 		preparedOrders.add(orderId);
 		completedOrders.removeIf(u -> u.equals(orderId));
 	}
@@ -80,7 +80,7 @@ public class PancakeService {
 		return preparedOrders;
 	}
 
-	public Object[] deliverOrder(UUID orderId) {
+	public synchronized Object[] deliverOrder(UUID orderId) {
 		if (!preparedOrders.contains(orderId))
 			return null;
 
