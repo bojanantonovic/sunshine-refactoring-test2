@@ -1,11 +1,14 @@
 package org.pancakelab.service;
 
+import org.jspecify.annotations.NullMarked;
+import org.jspecify.annotations.Nullable;
 import org.pancakelab.model.Order;
 import org.pancakelab.model.pancakes.PancakeRecipe;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@NullMarked
 public class PancakeService {
 	private final List<Order> orders = new ArrayList<>();
 	private final Set<UUID> completedOrders = new HashSet<>();
@@ -18,13 +21,14 @@ public class PancakeService {
 	}
 
 	public List<String> viewOrder(UUID orderId) {
-		final var order = getOrderById(orderId);
-		if (order == null) {
+		try {
+			final var order = getOrderById(orderId);
+			return order.getPancakeRecipes().stream() //
+					.map(PancakeRecipe::description) //
+					.toList();
+		} catch (NoSuchElementException exception) {
 			return Collections.emptyList();
 		}
-		return order.getPancakeRecipes().stream() //
-				.map(PancakeRecipe::description) //
-				.toList();
 	}
 
 	public void addPancake(UUID orderId, int count, String... ingredients) {
@@ -80,9 +84,10 @@ public class PancakeService {
 		return preparedOrders;
 	}
 
-	public synchronized Order deliverOrder(UUID orderId) {
-		if (!preparedOrders.contains(orderId))
+	public synchronized @Nullable Order deliverOrder(UUID orderId) {
+		if (!preparedOrders.contains(orderId)) {
 			return null;
+		}
 
 		var order = getOrderById(orderId);
 		OrderLog.logDeliverOrder(order);
@@ -96,6 +101,6 @@ public class PancakeService {
 	private Order getOrderById(final UUID orderId) {
 		return orders.stream() //
 				.filter(o -> o.getId().equals(orderId)).findFirst() //
-				.orElse(null);
+				.orElseThrow(NoSuchElementException::new);
 	}
 }

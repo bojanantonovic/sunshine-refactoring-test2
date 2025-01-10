@@ -1,7 +1,9 @@
 package org.pancakelab.service;
 
+import org.jspecify.annotations.NullMarked;
 import org.pancakelab.model.Order;
 
+@NullMarked
 public class OrderLog {
 	private static final StringBuilder log = new StringBuilder();
 

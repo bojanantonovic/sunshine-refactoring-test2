@@ -1,5 +1,6 @@
 package org.pancakelab.model;
 
+import org.jspecify.annotations.NullMarked;
 import org.pancakelab.model.pancakes.PancakeRecipe;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@NullMarked
 public class Order {
 	private final UUID id;
 	private final int building;
