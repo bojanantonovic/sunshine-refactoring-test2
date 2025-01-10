@@ -7,7 +7,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class PancakeService {
-	private List<Order> orders = new ArrayList<>();
+	private final List<Order> orders = new ArrayList<>();
 	private final Set<UUID> completedOrders = new HashSet<>();
 	private final Set<UUID> preparedOrders = new HashSet<>();
 
@@ -55,7 +55,6 @@ public class PancakeService {
 
 	public void cancelOrder(UUID orderId) {
 		Order order = getOrderById(orderId);
-		final var pancakeRecipes = order.getPancakeRecipes();
 		OrderLog.logCancelOrder(order);
 
 		orders.removeIf(o -> o.getId().equals(orderId));
@@ -87,7 +86,6 @@ public class PancakeService {
 			return null;
 
 		Order order = getOrderById(orderId);
-		final var pancakeRecipes = order.getPancakeRecipes();
 		List<String> pancakesToDeliver = viewOrder(orderId);
 		OrderLog.logDeliverOrder(order);
 
