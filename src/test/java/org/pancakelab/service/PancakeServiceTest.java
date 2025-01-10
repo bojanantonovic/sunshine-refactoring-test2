@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.pancakelab.model.Order;
+import org.pancakelab.model.pancakes.PancakeRecipe;
 
 import java.util.List;
 
@@ -122,8 +123,11 @@ public class PancakeServiceTest {
 		var ordersPancakes = pancakeService.viewOrder(order.getId());
 
 		assertEquals(List.of(), ordersPancakes);
-		assertEquals(order.getId(), ((Order) deliveredOrder[0]).getId());
-		assertEquals(pancakesToDeliver, (List<String>) deliveredOrder[1]);
+		assertEquals(order.getId(), deliveredOrder.getId());
+		final var expectedDescriptions = deliveredOrder.getPancakeRecipes().stream() //
+				.map(PancakeRecipe::description) //
+				.toList();
+		assertEquals(pancakesToDeliver, expectedDescriptions);
 
 		// tear down
 		order = null;
@@ -156,9 +160,7 @@ public class PancakeServiceTest {
 	private void addPancakes() {
 		var orderId = order.getId();
 		pancakeService.addPancake(orderId, 3, "dark chocolate");
-		var orderId1 = order.getId();
-		pancakeService.addPancake(orderId1, 3, "milk chocolate");
-		var orderId2 = order.getId();
-		pancakeService.addPancake(orderId2, 3, "milk chocolate", "hazelnuts");
+		pancakeService.addPancake(orderId, 3, "milk chocolate");
+		pancakeService.addPancake(orderId, 3, "milk chocolate", "hazelnuts");
 	}
 }

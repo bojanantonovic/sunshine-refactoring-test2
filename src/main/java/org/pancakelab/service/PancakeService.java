@@ -80,21 +80,22 @@ public class PancakeService {
 		return preparedOrders;
 	}
 
-	public synchronized Object[] deliverOrder(UUID orderId) {
+	public synchronized Order deliverOrder(UUID orderId) {
 		if (!preparedOrders.contains(orderId))
 			return null;
 
 		var order = getOrderById(orderId);
-		var pancakesToDeliver = viewOrder(orderId);
 		OrderLog.logDeliverOrder(order);
 
 		orders.removeIf(o -> o.getId().equals(orderId));
 		preparedOrders.removeIf(u -> u.equals(orderId));
 
-		return new Object[] {order, pancakesToDeliver};
+		return order;
 	}
 
 	private Order getOrderById(final UUID orderId) {
-		return orders.stream().filter(o -> o.getId().equals(orderId)).findFirst().orElse(null);
+		return orders.stream() //
+				.filter(o -> o.getId().equals(orderId)).findFirst() //
+				.orElse(null);
 	}
 }
