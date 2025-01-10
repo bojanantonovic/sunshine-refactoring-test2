@@ -12,11 +12,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Deprecated
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PancakeServiceTest {
-	private final PancakeService pancakeService = new PancakeService();
+public class PancakeService2Test {
+	private final PancakeService2 pancakeService = new PancakeService2();
 	private Order order = null;
 
 	private final static String DARK_CHOCOLATE_PANCAKE_DESCRIPTION = "Delicious pancake with dark chocolate!";
