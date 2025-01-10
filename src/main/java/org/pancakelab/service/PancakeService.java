@@ -35,7 +35,6 @@ public class PancakeService {
 	}
 
 	private void addPancake(PancakeRecipe pancake, Order order) {
-		pancake.setOrderId(order.getId());
 		final var pancakeRecipes = order.getPancakeRecipes();
 		pancakeRecipes.add(pancake);
 
